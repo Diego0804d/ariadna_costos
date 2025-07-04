@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precios de Costura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .col {
+            flex: 1;
+        }
+        .result-box {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60;
+            margin: 10px 0;
+        }
+        .price-final {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .tabla-trabajos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .tabla-trabajos th, .tabla-trabajos td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .tabla-trabajos th {
+            background-color: #3498db;
+            color: white;
+        }
+        .tabla-trabajos tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-eliminar {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .btn-eliminar:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧵 Calculadora de Precios de Costura</h1>
+    
+    <div class="container">
+        <h2>⚙️ Configuración General</h2>
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="tarifahora">Tarifa por hora ($)</label>
+                    <input type="number" id="tarifahora" value="10" step="0.50">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="gastosoperativos">Gastos operativos (%)</label>
+                    <input type="number" id="gastosoperativos" value="8" step="0.5">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="margenganancia">Margen de ganancia (%)</label>
+                    <input type="number" id="margenganancia" value="20" step="0.5">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>📝 Calcular Precio de Trabajo</h2>
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="nombreTrabajo">Nombre del trabajo</label>
+                    <input type="text" id="nombreTrabajo" placeholder="Ej: Dobladillo de pantalón">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="tiempoHoras">Tiempo (horas)</label>
+                    <input type="number" id="tiempoHoras" step="0.25" placeholder="Ej: 1.5">
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="tiempoMinutos">O tiempo (minutos)</label>
+                    <input type="number" id="tiempoMinutos" placeholder="Ej: 90">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="complejidad">Complejidad</label>
+                    <select id="complejidad">
+                        <option value="1">Normal</option>
+                        <option value="1.25">Complejo (+25%)</option>
+                        <option value="1.5">Muy complejo (+50%)</option>
+                        <option value="1.75">Urgente (+75%)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h3>💰 Materiales</h3>
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="hilo">Hilo ($)</label>
+                    <input type="number" id="hilo" step="0.25" value="0">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="botones">Botones ($)</label>
+                    <input type="number" id="botones" step="0.25" value="0">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="cierres">Cierres ($)</label>
+                    <input type="number" id="cierres" step="0.25" value="0">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="otros">Otros materiales ($)</label>
+                    <input type="number" id="otros" step="0.25" value="0">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="calcularPrecio()">Calcular Precio</button>
+        <button class="btn" onclick="agregarATabla()">Agregar a Lista</button>
+        <button class="btn" onclick="limpiarFormulario()">Limpiar</button>
+    </div>
+
+    <div class="container">
+        <h2>🧮 Resultado del Cálculo</h2>
+        <div id="desglose" style="display: none;">
+            <div class="result-box">
+                <strong>Desglose del precio:</strong><br>
+                • Mano de obra: $<span id="manoObra">0</span><br>
+                • Materiales: $<span id="totalMateriales">0</span><br>
+                • Gastos operativos: $<span id="gastosCalc">0</span><br>
+                • Ganancia: $<span id="gananciaCalc">0</span>
+            </div>
+            <div class="price-final">
+                Precio Final: $<span id="precioFinal">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>📋 Lista de Trabajos</h2>
+        <table class="tabla-trabajos" id="tablaTrabajos">
+            <thead>
+                <tr>
+                    <th>Trabajo</th>
+                    <th>Tiempo</th>
+                    <th>Complejidad</th>
+                    <th>Mano de obra</th>
+                    <th>Materiales</th>
+                    <th>Precio Final</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTabla">
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="btn" onclick="exportarTabla()">Exportar a Excel</button>
+            <button class="btn" onclick="limpiarTabla()">Limpiar Lista</button>
+        </div>
+    </div>
+
+    <script>
+        let trabajos = [];
+        let contadorId = 1;
+
+        function calcularPrecio() {
+            const tarifahora = parseFloat(document.getElementById('tarifahora').value) || 0;
+            const gastosoperativos = parseFloat(document.getElementById('gastosoperativos').value) || 0;
+            const margenganancia = parseFloat(document.getElementById('margenganancia').value) || 0;
+            
+            let tiempoHoras = parseFloat(document.getElementById('tiempoHoras').value) || 0;
+            const tiempoMinutos = parseFloat(document.getElementById('tiempoMinutos').value) || 0;
+            
+            // Convertir minutos a horas si se ingresaron minutos
+            if (tiempoMinutos > 0) {
+                tiempoHoras = tiempoMinutos / 60;
+                document.getElementById('tiempoHoras').value = tiempoHoras.toFixed(2);
+            }
+            
+            const complejidad = parseFloat(document.getElementById('complejidad').value) || 1;
+            
+            const hilo = parseFloat(document.getElementById('hilo').value) || 0;
+            const botones = parseFloat(document.getElementById('botones').value) || 0;
+            const cierres = parseFloat(document.getElementById('cierres').value) || 0;
+            const otros = parseFloat(document.getElementById('otros').value) || 0;
+            
+            // Cálculos
+            const manoObra = tiempoHoras * tarifahora * complejidad;
+            const totalMateriales = hilo + botones + cierres + otros;
+            const subtotal = manoObra + totalMateriales;
+            const gastosCalc = subtotal * (gastosoperativos / 100);
+            const gananciaCalc = subtotal * (margenganancia / 100);
+            const precioFinal = subtotal + gastosCalc + gananciaCalc;
+            
+            // Mostrar resultados
+            document.getElementById('manoObra').textContent = manoObra.toFixed(2);
+            document.getElementById('totalMateriales').textContent = totalMateriales.toFixed(2);
+            document.getElementById('gastosCalc').textContent = gastosCalc.toFixed(2);
+            document.getElementById('gananciaCalc').textContent = gananciaCalc.toFixed(2);
+            document.getElementById('precioFinal').textContent = precioFinal.toFixed(2);
+            document.getElementById('desglose').style.display = 'block';
+        }
+
+        function agregarATabla() {
+            const nombre = document.getElementById('nombreTrabajo').value;
+            if (!nombre) {
+                alert('Por favor ingresa el nombre del trabajo');
+                return;
+            }
+            
+            calcularPrecio();
+            
+            const manoObra = parseFloat(document.getElementById('manoObra').textContent);
+            const totalMateriales = parseFloat(document.getElementById('totalMateriales').textContent);
+            const precioFinal = parseFloat(document.getElementById('precioFinal').textContent);
+            
+            let tiempoHoras = parseFloat(document.getElementById('tiempoHoras').value) || 0;
+            const tiempoMinutos = parseFloat(document.getElementById('tiempoMinutos').value) || 0;
+            
+            if (tiempoMinutos > 0) {
+                tiempoHoras = tiempoMinutos / 60;
+            }
+            
+            const complejidadSelect = document.getElementById('complejidad');
+            const complejidadTexto = complejidadSelect.options[complejidadSelect.selectedIndex].text;
+            
+            const trabajo = {
+                id: contadorId++,
+                nombre: nombre,
+                tiempo: tiempoHoras < 1 ? `${Math.round(tiempoHoras * 60)} min` : `${tiempoHoras.toFixed(2)} h`,
+                complejidad: complejidadTexto,
+                manoObra: manoObra.toFixed(2),
+                materiales: totalMateriales.toFixed(2),
+                precioFinal: precioFinal.toFixed(2)
+            };
+            
+            trabajos.push(trabajo);
+            actualizarTabla();
+            limpiarFormulario();
+        }
+
+        function actualizarTabla() {
+            const tbody = document.getElementById('bodyTabla');
+            tbody.innerHTML = '';
+            
+            trabajos.forEach(trabajo => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${trabajo.nombre}</td>
+                    <td>${trabajo.tiempo}</td>
+                    <td>${trabajo.complejidad}</td>
+                    <td>$${trabajo.manoObra}</td>
+                    <td>$${trabajo.materiales}</td>
+                    <td><strong>$${trabajo.precioFinal}</strong></td>
+                    <td><button class="btn btn-eliminar" onclick="eliminarTrabajo(${trabajo.id})">Eliminar</button></td>
+                `;
+            });
+        }
+
+        function eliminarTrabajo(id) {
+            trabajos = trabajos.filter(trabajo => trabajo.id !== id);
+            actualizarTabla();
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('nombreTrabajo').value = '';
+            document.getElementById('tiempoHoras').value = '';
+            document.getElementById('tiempoMinutos').value = '';
+            document.getElementById('complejidad').value = '1';
+            document.getElementById('hilo').value = '0';
+            document.getElementById('botones').value = '0';
+            document.getElementById('cierres').value = '0';
+            document.getElementById('otros').value = '0';
+            document.getElementById('desglose').style.display = 'none';
+        }
+
+        function limpiarTabla() {
+            if (confirm('¿Estás segura de que quieres eliminar todos los trabajos?')) {
+                trabajos = [];
+                actualizarTabla();
+            }
+        }
+
+        function exportarTabla() {
+            if (trabajos.length === 0) {
+                alert('No hay trabajos para exportar');
+                return;
+            }
+            
+            let csv = 'Trabajo,Tiempo,Complejidad,Mano de obra,Materiales,Precio Final\n';
+            trabajos.forEach(trabajo => {
+                csv += `"${trabajo.nombre}","${trabajo.tiempo}","${trabajo.complejidad}","$${trabajo.manoObra}","$${trabajo.materiales}","$${trabajo.precioFinal}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'precios_costura.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Actualizar cálculos automáticamente cuando cambien los valores
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', function() {
+                if (document.getElementById('desglose').style.display === 'block') {
+                    calcularPrecio();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
